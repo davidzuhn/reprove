@@ -3,7 +3,8 @@
   "repositories": [
     {
       "repository": "https://github.com/davidzuhn/testrepo2.git",
-      "branch": "master"
+      "commit_id": "d953334d863fa9dcd8e8339d2f0059c68e905b09",
+      "branch": "release/1.2.0-branch"
     },
     {
       "repository": "https://github.com/davidzuhn/testrepo1.git",
