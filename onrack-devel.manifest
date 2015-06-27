@@ -1,0 +1,13 @@
+{
+  "build_name": "onrack-devel",
+  "repositories": [
+    {
+      "repository": "https://github.com/davidzuhn/testrepo2.git",
+      "branch": "master"
+    },
+    {
+      "repository": "https://github.com/davidzuhn/testrepo1.git",
+      "branch": "master"
+    }
+  ]
+}
