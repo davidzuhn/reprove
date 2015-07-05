@@ -1,14 +1,17 @@
 {
-  "build_name": "onrack-devel",
+  "build-name": "project-devel",
   "repositories": [
     {
       "repository": "https://github.com/davidzuhn/testrepo2.git",
       "commit_id": "d953334d863fa9dcd8e8339d2f0059c68e905b09",
-      "branch": "release/1.2.0-branch"
+      "branch": "release/1.2.0-branch",
+      "comment": "some other text for repo2"
     },
     {
       "repository": "https://github.com/davidzuhn/testrepo1.git",
-      "branch": "master"
+      "branch": "master",
+      "checked-out-directory-name": "repo1",
+      "comment": "some text goes here"
     }
   ]
 }

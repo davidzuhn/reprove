@@ -1,3 +1,8 @@
+# see http://stackoverflow.com/questions/1783405/checkout-remote-git-branch
+# and http://stackoverflow.com/questions/791959/download-a-specific-tag-with-git
+
+
+
 import argparse
 import json
 import os
@@ -5,10 +10,11 @@ import shutil
 import subprocess
 import sys
 
-config = {'force': False,
-          'manifest': None,
-          'builddir': None
-          }
+CONFIG = {
+    'force': False,
+    'manifest': None,
+    'builddir': None
+}
 
 
 def get_config():
@@ -19,19 +25,19 @@ def get_config():
     args = parser.parse_args()
 
     if args.manifest:
-        config['manifest'] = args.manifest
+        CONFIG['manifest'] = args.manifest
     if args.builddir:
-        config['builddir'] = args.builddir
+        CONFIG['builddir'] = args.builddir
     if args.force:
-        config['force'] = True
+        CONFIG['force'] = True
 
-    if 'builddir' not in config:
+    if 'builddir' not in CONFIG:
         print "Must specify a destination build directory (--builddir pathname)"
         sys.exit(1)
     else:
         check_builddir()
 
-    if 'manifest' not in config:
+    if 'manifest' not in CONFIG:
         print "Must specify a destination build directory (--builddir pathname)"
         sys.exit(1)
     else:
@@ -39,23 +45,23 @@ def get_config():
 
 
 def check_builddir():
-    if os.path.exists(config['builddir']):
-        if config['force']:
-            shutil.rmtree(config['builddir'])
-            print "Removing existing data at {0}".format(config['builddir'])
+    if os.path.exists(CONFIG['builddir']):
+        if CONFIG['force']:
+            shutil.rmtree(CONFIG['builddir'])
+            print "Removing existing data at {0}".format(CONFIG['builddir'])
         else:
-            print "Unwilling to overwrite destination builddir of {0}".format(config['builddir'])
+            print "Unwilling to overwrite destination builddir of {0}".format(CONFIG['builddir'])
             sys.exit(1)
 
-    os.mkdir(config['builddir'])
+    os.mkdir(CONFIG['builddir'])
 
 
 def read_manifest_file():
-    if not os.path.isfile(config['manifest']):
-        print "No file found for manifest at {0}".format(config['manifest'])
+    if not os.path.isfile(CONFIG['manifest']):
+        print "No file found for manifest at {0}".format(CONFIG['manifest'])
 
-    with open(config['manifest'], "r") as manifest_file:
-        config['repos'] = json.load(manifest_file)
+    with open(CONFIG['manifest'], "r") as manifest_file:
+        CONFIG['repos'] = json.load(manifest_file)
 
         # print json.dumps(config['repos'], sort_keys=True, indent=4)
 
@@ -109,9 +115,14 @@ def checkout_repo(repo):
 
     print "BASENAME {0}".format(basename)
 
-    run_git(["clone", repo_url], config['builddir'])
+    command = ["clone", repo_url]
+    if 'checked-out-directory-name' in repo:
+        basename = repo['checked-out-directory-name']
+        command.append(basename)
 
-    working_directory = os.path.join(config['builddir'], basename)
+    run_git(command, CONFIG['builddir'])
+
+    working_directory = os.path.join(CONFIG['builddir'], basename)
 
 
     # check in this order...
@@ -136,7 +147,7 @@ def checkout_repo(repo):
 
 
 def get_repositories():
-    repo_list = config['repos']['repositories']
+    repo_list = CONFIG['repos']['repositories']
     if repo_list is None:
         print "No repository list found in manifest file"
         sys.exit(2)
@@ -145,13 +156,15 @@ def get_repositories():
             if validate_repo_entry(repo):
                 checkout_repo(repo)
 
+
 def main():
     get_config()
 
-    if 'repos' in config:
+    if 'repos' in CONFIG:
         get_repositories()
     else:
-        print "NO repository info found in manifest: {0}".format(config['manifest'])
+        print "NO repository info found in manifest: {0}".format(CONFIG['manifest'])
+
 
 if __name__ == "__main__":
     main()
