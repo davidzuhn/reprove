@@ -1,6 +1,7 @@
 # see http://stackoverflow.com/questions/1783405/checkout-remote-git-branch
 # and http://stackoverflow.com/questions/791959/download-a-specific-tag-with-git
 
+# check out a set of repositories to match the manifest file
 
 
 import argparse
